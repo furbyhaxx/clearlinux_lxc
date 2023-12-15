@@ -1,0 +1,83 @@
+image:
+  name: clearlinux-40450-x86_64
+  distribution: clearlinux
+  release: 40450
+  description: |-
+    ClearLinux {{ image.release }}
+  architecture: x86_64
+
+source:
+  downloader: rootfs-http
+  url: file:///root/clearlxc/clearlinux.rootfs.tar
+
+files:
+  - path: /etc/hostname
+    generator: hostname
+
+  - path: /etc/hosts
+    generator: hosts
+
+  - path: /usr/lib/firmware
+    generator: remove
+
+  - path: /etc/machine-id
+    generator: dump
+
+  - path: /var/lib/dbus/machine-id
+    generator: remove
+
+  - name: ext4
+    generator: fstab
+    types:
+    - vm
+
+packages:
+  custom_manager:
+    clean:
+      cmd: swupd
+      flags:
+        - clean
+        - -y
+        - --quiet
+    install:
+      cmd: swupd
+      flags:
+        - bundle-add
+        - --no-boot-update
+        - -y
+        - --quiet
+    remove:
+      cmd: swupd
+      flags:
+        - bundle-remove
+        - --no-boot-update
+        - --force
+        - -y
+        - --quiet
+    refresh:
+      cmd: swupd
+      flags:
+        - info
+        - -y
+        - --quiet
+    update:
+      cmd: swupd
+      flags:
+        - update
+        - --no-boot-update
+        - -y
+        - --quiet
+
+  update: false
+  cleanup: true
+
+  sets:
+    - packages:
+        - sudo
+        - sysadmin-basic
+        - openssh-server
+      action: install
+
+mappings:
+  architectures:
+    x86_64: amd64
