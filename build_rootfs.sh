@@ -15,3 +15,5 @@ swupd os-install \
 	base
 
  echo "Built rootfs at ./base for ClearLinux $CL_VERSION"
+
+ export CL_VERSION=$CL_VERSION
