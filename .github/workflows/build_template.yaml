@@ -14,14 +14,18 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Building rootfs
-        id: build
+        id: build-rootfs
         shell: bash
         run: |
           ./build_rootfs.sh
           echo -e "- Version: $CL_VERSION\n- [Clear Linux Release](https://cdn.download.clearlinux.org/releases/$CL_VERSION/)\n- [Release Notes](https://cdn.download.clearlinux.org/releases/$CL_VERSION/clear/RELEASENOTES)" > release_body.txt
-          echo "cl_version=$CL_VERSION" >> $GITHUB_OUTPUT
+          echo "CL_VERSION=$CL_VERSION" >> $GITHUB_OUTPUT
+          echo "CL_TEST=TESTVAR" >> $GITHUB_OUTPUT
+          echo "$CL_VERSION"
 
       - name: Creating tarball
+        env:
+          CL_TEST: ${{ steps.build-rootfs.outputs.CL_TEST }}
         shell: bash
         run: |
           ./create_tarball.sh
@@ -29,14 +33,14 @@ jobs:
       - name: Upload tarball as GitHub artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ClearLinux-${{ steps.build.outputs.cl_version }}-amd64.tar.gz
-          path: ClearLinux-${{ steps.build.outputs.cl_version }}-amd64.tar.gz
+          name: ClearLinux-${{ steps.build-rootfs.outputs.CL_TEST }}-amd64.tar.gz
+          path: ClearLinux-${{ steps.build-rootfs.outputs.CL_TEST }}-amd64.tar.gz
           if-no-files-found: error
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{ steps.sh.outputs.cl_version }}
-          tag_name: ${{ steps.build.outputs.cl_version }}
+          name: ${{ steps.build-rootfs.outputs.CL_TEST }}
+          tag_name: ${{ steps.build-rootfs.outputs.CL_TEST }}
           body_path: release_body.txt
-          files: ClearLinux-${{ steps.build.outputs.cl_version }}-amd64.tar.gz
+          files: ClearLinux-${{ steps.build-rootfs.outputs.CL_TEST }}-amd64.tar.gz
