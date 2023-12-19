@@ -5,7 +5,7 @@ CL_VERSION=$(curl -s https://cdn.download.clearlinux.org/releases/current/clear/
 upstream_url="https://cdn.download.clearlinux.org/update"
 statedir="$PWD/swupd-state"
 #bundles="os-core,os-core-update,systemd-networkd-autostart,shells"
-bundles="os-core-update,systemd-networkd-autostart,openssh-server,sysadmin-basic"
+bundles="os-core-update,os-core-search,systemd-networkd-autostart,openssh-server,sysadmin-basic"
 swupd os-install \
 	--quiet \
 	--url $upstream_url \
