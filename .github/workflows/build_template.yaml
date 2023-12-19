@@ -1,0 +1,40 @@
+name: build_template
+on: 
+  workflow_dispatch:
+#  schedule:
+#    - cron: 20 4 * * 6
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: 
+      image: clearlinux:latest
+      options: --privileged --cap-add=SYS_ADMIN --security-opt apparmor:unconfined
+    steps:
+      - name: Building rootfs
+        id: build
+        shell: bash
+        run: |
+          ./build_rootfs.sh
+          echo -e "- Version: $CL_VERSION\n- [Clear Linux Release](https://cdn.download.clearlinux.org/releases/$CL_VERSION/)\n- [Release Notes](https://cdn.download.clearlinux.org/releases/$CL_VERSION/clear/RELEASENOTES)" > release_body.txt
+          echo "cl_version=$CL_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Creating tarball
+        shell: bash
+        run: |
+          ./create_tarball.sh
+
+      - name: Upload tarball as GitHub artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ClearLinux-${{ steps.build.outputs.cl_version }}-amd64.tar.gz
+          path: ClearLinux-${{ steps.build.outputs.cl_version }}-amd64.tar.gz
+          if-no-files-found: error
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ steps.sh.outputs.cl_version }}
+          tag_name: ${{ steps.build.outputs.cl_version }}
+          body_path: release_body.txt
+          files: ClearLinux-${{ steps.build.outputs.cl_version }}-amd64.tar.gz
