@@ -33,7 +33,7 @@ jobs:
       - name: Upload tarball as GitHub artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ClearLinux-${{ steps.build-rootfs.outputs.CL_TEST }}-amd64.tar.gz
+          name: ClearLinux-${{ steps.build-rootfs.outputs.CL_VERSION }}-amd64.tar.gz
           path: ClearLinux-${{ steps.build-rootfs.outputs.CL_TEST }}-amd64.tar.gz
           if-no-files-found: error
 
