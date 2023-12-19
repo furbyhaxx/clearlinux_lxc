@@ -15,8 +15,8 @@ jobs:
         id: build
         shell: bash
         run: |
-          cd /github/workspace/
-          ./build_rootfs.sh
+          ls -lah
+          /github/home/build_rootfs.sh
           echo -e "- Version: $CL_VERSION\n- [Clear Linux Release](https://cdn.download.clearlinux.org/releases/$CL_VERSION/)\n- [Release Notes](https://cdn.download.clearlinux.org/releases/$CL_VERSION/clear/RELEASENOTES)" > release_body.txt
           echo "cl_version=$CL_VERSION" >> $GITHUB_OUTPUT
 
