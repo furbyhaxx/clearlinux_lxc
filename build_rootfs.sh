@@ -7,6 +7,7 @@ statedir="$PWD/swupd-state"
 #bundles="os-core,os-core-update,systemd-networkd-autostart,shells"
 bundles="os-core-update,systemd-networkd-autostart,openssh-server,sysadmin-basic"
 swupd os-install \
+	--quiet \
 	--url $upstream_url \
 	--statedir $statedir \
 	--no-boot-update \
