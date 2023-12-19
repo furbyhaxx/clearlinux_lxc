@@ -11,6 +11,8 @@ jobs:
       image: clearlinux:latest
       options: --privileged --cap-add=SYS_ADMIN --security-opt apparmor:unconfined
     steps:
+      - uses: actions/checkout@v4
+      
       - name: Building rootfs
         id: build
         shell: bash
