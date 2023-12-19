@@ -21,12 +21,11 @@ jobs:
           ./build_rootfs.sh
           echo -e "- Version: $CL_VERSION\n- [Clear Linux Release](https://cdn.download.clearlinux.org/releases/$CL_VERSION/)\n- [Release Notes](https://cdn.download.clearlinux.org/releases/$CL_VERSION/clear/RELEASENOTES)" > release_body.txt
           echo "CL_VERSION=$CL_VERSION" >> $GITHUB_OUTPUT
-          echo "CL_TEST=TESTVAR" >> $GITHUB_OUTPUT
-          echo "$CL_VERSION"
+          echo "ClearLinux Version $CL_VERSION"
 
       - name: Creating tarball
         env:
-          CL_TEST: ${{ steps.build-rootfs.outputs.CL_TEST }}
+          CL_VERSION: ${{ steps.build-rootfs.outputs.CL_VERSION }}
         shell: bash
         run: |
           ./create_tarball.sh
@@ -35,13 +34,13 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ClearLinux-${{ steps.build-rootfs.outputs.CL_VERSION }}-amd64.tar.gz
-          path: ClearLinux-${{ steps.build-rootfs.outputs.CL_TEST }}-amd64.tar.gz
+          path: ClearLinux-${{ steps.build-rootfs.outputs.CL_VERSION }}-amd64.tar.gz
           if-no-files-found: error
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{ steps.build-rootfs.outputs.CL_TEST }}
-          tag_name: ${{ steps.build-rootfs.outputs.CL_TEST }}
+          name: ${{ steps.build-rootfs.outputs.CL_VERSION }}
+          tag_name: ${{ steps.build-rootfs.outputs.CL_VERSION }}
           body_path: release_body.txt
-          files: ClearLinux-${{ steps.build-rootfs.outputs.CL_TEST }}-amd64.tar.gz
+          files: ClearLinux-${{ steps.build-rootfs.outputs.CL_VERSION }}-amd64.tar.gz
