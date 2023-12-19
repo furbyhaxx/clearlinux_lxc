@@ -17,6 +17,7 @@ jobs:
         id: build-rootfs
         shell: bash
         run: |
+          export CL_VERSION=$(curl -s https://cdn.download.clearlinux.org/releases/current/clear/latest)
           ./build_rootfs.sh
           echo -e "- Version: $CL_VERSION\n- [Clear Linux Release](https://cdn.download.clearlinux.org/releases/$CL_VERSION/)\n- [Release Notes](https://cdn.download.clearlinux.org/releases/$CL_VERSION/clear/RELEASENOTES)" > release_body.txt
           echo "CL_VERSION=$CL_VERSION" >> $GITHUB_OUTPUT
