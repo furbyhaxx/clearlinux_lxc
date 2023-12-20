@@ -1,8 +1,8 @@
 name: build_template
 on: 
   workflow_dispatch:
-#  schedule:
-#    - cron: 20 4 * * 6
+  schedule:
+    - cron: 20 4 * * 6
   
 jobs:
   build:
